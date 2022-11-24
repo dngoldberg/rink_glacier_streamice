@@ -6,7 +6,7 @@ function setup_experiment(nx,ny,gx,gy);
 % note files created will be of size (nx+gx, ny+gy)
 
 load rink_data
-filter_surf = false;
+filter_surf = true;
 
 %%% THESE VALUES SHOULD BE CONSISTENT WITH data.streamice
 density_ice = 917;
@@ -20,13 +20,13 @@ density_oce = 1027;
 %%% PREPARE VELOCITY CONSTRAINTS
 
 vmask = (v>0);
-vmask_interp = interp2(xmeas,ymeas',double(vmask),x_mesh_mid,y_mesh_mid');
+vmask_interp = interp2(x_il,y_il',double(vmask),x_mesh_mid,y_mesh_mid');
 
-vx = interp2(xmeas,ymeas',vx,x_mesh_mid,y_mesh_mid'); 
+vx = interp2(x_il,y_il',vx,x_mesh_mid,y_mesh_mid'); 
 vx(vmask_interp<1) = -99999;
-vy = interp2(xmeas,ymeas',vy,x_mesh_mid,y_mesh_mid'); 
+vy = interp2(x_il,y_il',vy,x_mesh_mid,y_mesh_mid'); 
 vy(vmask_interp<1) = -99999;
-verr = interp2(xmeas,ymeas',verr,x_mesh_mid,y_mesh_mid'); 
+verr = interp2(x_il,y_il',verr,x_mesh_mid,y_mesh_mid'); 
 verr(vmask_interp<1) = -99999;
 
 xbm = double(xbm);
@@ -35,11 +35,13 @@ ybm = double(ybm);
 %%% PREPARE THICKNESS BASED ON SURFACE, BED and DENSITIES
 
 %%% Note, a gaussian filter is applied to the surface but only has an effect
-%%% where topography is extremely variable
+%%% where topography is extremely variable -- IGNORED if filter_surf = false
 
 surf = interp2(xbm,ybm',double(surf),x_mesh_mid,y_mesh_mid');
+thick = interp2(xbm,ybm',double(thick),x_mesh_mid,y_mesh_mid');
 surf(surf<0)=0;
 mask_bm = interp2(xbm,ybm',mask_bm,x_mesh_mid,y_mesh_mid','nearest');
+
 if(filter_surf)
     surf2 = surf;
     surf2(thick<5 & surf2>0)=.5;
@@ -51,6 +53,9 @@ if(filter_surf)
     surf = surf2;
     surf(isnan(surf))=0;
 end
+
+%%% RATHER THAN USE BEDMACHINE THICKNESS, SURFACE IS USED AND THICKNESS IS INFERRED FROM LOCATION
+%%% THIS IS IN CASE OF ANY DISCREPANCIES IN DENSITY WITH BEDMACHINE FOR FLOATING ICE
 
 bed = interp2(xbm,ybm',bed,x_mesh_mid,y_mesh_mid');
 thick_floatation = (- density_oce*surf) / (density_ice - density_oce);
@@ -64,12 +69,21 @@ thick = thick_mod;
 
 %%%%%%%%%%%%%%%%%%%%%
 
-hmask = ones(size(thick));
+%%% HMASK IS DEFINED HERE
+% MASK = 1: active ice
+% MASK = -1: out of domain
+% MASK = 0: ocean
+% ice-ocean boundaries have a calving front stress condition
+% ice-"out of domain" boundaries have no-slip (zero velocity) conditions
+%
+% MASK is -1 where ice is less then 5m (to avoid ill conditioning)
+% 
+
+hmask = zeros(size(thick));
+hmask(thick>2)=1;
 hmask([1 end],:) = -1;
 hmask(:,[1 end]) = -1;
-
-hmask(thick<5)=-1;
-con_mask = thick~=0 & hmask==1;
+con_mask = hmask==1;
 CC = bwconncomp(con_mask,4);
 pp = CC.PixelIdxList;
 for i=1:length(pp);
