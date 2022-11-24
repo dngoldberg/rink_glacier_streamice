@@ -26,6 +26,7 @@ vx = interp2(x_il,y_il',vx,x_mesh_mid,y_mesh_mid');
 vx(vmask_interp<1) = -99999;
 vy = interp2(x_il,y_il',vy,x_mesh_mid,y_mesh_mid'); 
 vy(vmask_interp<1) = -99999;
+%verr = verr .* countIL.^(0.5);
 verr = interp2(x_il,y_il',verr,x_mesh_mid,y_mesh_mid'); 
 verr(vmask_interp<1) = -99999;
 

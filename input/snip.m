@@ -20,6 +20,7 @@ v = flipud(double(ncread(path_to_IL,'v')'));
 vx = flipud(double(ncread(path_to_IL,'vx')')); 
 vy = flipud(double(ncread(path_to_IL,'vy')')); 
 verr = flipud(double(ncread(path_to_IL,'v_err')')); 
+countIL  = flipud(double(ncread(path_to_IL,'count')'));
 
 
 xbm = ncread(path_to_BMG,'x');
@@ -40,6 +41,7 @@ v = v(J_meas,I_meas);
 vx = vx(J_meas,I_meas);
 vy = vy(J_meas,I_meas);
 verr = verr(J_meas,I_meas);
+countIL = countIL(J_meas,I_meas);
 
 bed = bed_bm(J_bm,I_bm);
 surf = surf_bm(J_bm,I_bm);
@@ -60,5 +62,5 @@ ybm = ybm(J_bm);
 x_il = x(I_meas);
 y_il = y(J_meas);
 
-save rink_data.mat v vx vy verr bed surf thick diffx diffy x_mesh_mid y_mesh_mid xbm ybm x_il y_il mask_bm
+save rink_data.mat v vx vy verr bed surf thick diffx diffy x_mesh_mid y_mesh_mid xbm ybm x_il y_il mask_bm countIL
 

@@ -10,7 +10,7 @@ JOBNO=00
 
 # record start times
 TIMEQSTART="$(date +%s)"
-echo Start-time `date` >> ../run_forward/times
+echo Start-time `date` >> times
 
 ./prepare_run_ad.sh $1 $2
 
