@@ -1,0 +1,15 @@
+ &CTRL_NML
+ doPackDiag = .FALSE.,
+ /
+ &CTRL_PACKNAMES
+ /
+ &CTRL_NML_GENARR
+  xx_genarr2d_file(1)   = 'xx_genarr2d1',
+  xx_genarr2d_weight(1) = 'wunit',
+  xx_genarr2d_file(2)   = 'xx_genarr2d2',
+  xx_genarr2d_weight(2) = 'wunit',
+#  xx_genarr2d_file(3)   = 'xx_genarr2d3',
+#  xx_genarr2d_weight(3) = 'wunit',
+# xx_gentim2d_period = 6307200
+  genarr2dPrecond = 1 1
+ /

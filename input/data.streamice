@@ -1,0 +1,66 @@
+# ===================================
+# | Parameters for STREAMICE package |
+# ===================================
+ &STREAMICE_PARM01
+ streamice_density = 917.,
+ streamice_density_ocean_avg = 1027,
+ n_basal_friction = 0.3333,
+ B_glen_isothermal = 700,
+ C_basal_fric_const = 100,
+ n_glen = 3.0,
+ eps_glen_min = 1.0e-6,
+ eps_u_min = 1.0e-5,
+ streamice_cg_tol = 1.0e-7,
+ STREAMICE_lower_cg_tol = .true.,
+ STREAMICE_chkresidconvergence=.true.
+ STREAMICE_chkfixedptconvergence=.true.
+ streamice_nonlin_tol = 1.e-6,
+ streamice_nonlin_tol_fp = 1.0e-6,
+ streamice_max_cg_iter = 20000,
+ streamice_max_nl_iter = 100,
+ STREAMICEcalveMaskFile = ' ',
+ STREAMICE_move_front = .false.,
+ STREAMICE_calve_to_mask = .false.,
+ streamice_CFL_factor = 0.5,
+ STREAMICE_dump_mdsio = .true.,
+# STREAMICEBdotConfig='FILE',
+# STREAMICEBdotFile='',
+# STREAMICEAdotConfig='FILE',
+# STREAMICEAdotFile = 'SMB_racmo.bin',
+ STREAMICEbasalTracConfig='UNIFORM',
+ STREAMICEGlenConstConfig='UNIFORM',
+ STREAMICEthickInit='FILE',
+ STREAMICEtopogFile = 'topog.bin',
+ streamicethickFile = 'BedMachineThick.bin',
+ STREAMICEglenconstfile = 'BglenPattyn.bin',
+ STREAMICEbasaltracFile = 'Beta2009_30.bin',
+ streamicehmaskfile = 'hmask.bin',
+ STREAMICEuFaceBdryFile = 'ufacemask.bin',
+ STREAMICEvFaceBdryFile = 'vfacemask.bin',
+ STREAMICEvelOptimFile = 'velobs',
+ STREAMICE_diagnostic_only=.true.,
+ streamice_wgt_vel = 1e6
+ streamice_wgt_tikh = 1e6
+ streamice_wgt_drift = 1.e-2
+ streamice_wgt_surf = 0.0
+ streamice_allow_reg_coulomb = .true.
+ &
+
+ &STREAMICE_PARM02
+ &
+
+ &STREAMICE_PARMPETSC
+ PETSC_SOLVER_TYPE = 'CG',
+ PETSC_PRECOND_TYPE = 'BLOCKJACOBI',
+ streamice_use_petsc = .true. 
+ streamice_petsc_pcfactorlevels=6
+ &
+
+ &STREAMICE_PARMOAD
+ streamice_nonlin_tol_adjoint_rl = 1.e-2,
+ STREAMICE_OAD_petsc_reuse=.true.,
+ PETSC_PRECOND_OAD='BLOCKJACOBI'
+ &
+
+ &STREAMICE_PARM03
+ &

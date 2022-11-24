@@ -1,0 +1,15 @@
+#
+# ********************************
+# Off-line optimization parameters
+# ********************************
+ &OPTIM
+ optimcycle=-1,
+ numiter=1000,
+ nfunc=10,
+ dfminfrac=0.0001,
+ iprint=10,
+ nupdate=5,
+ /
+ &M1QN3
+# coldStart=.true.,
+ /

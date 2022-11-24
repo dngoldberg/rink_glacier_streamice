@@ -1,0 +1,69 @@
+# Model parameters
+# Continuous equation parameters
+ &PARM01
+ tRef=20.,
+ sRef=10.,
+ gravity=9.81,
+ gBaro=9.81,
+ rigidLid=.FALSE.,
+ implicitFreeSurface=.TRUE.,
+ eosType='LINEAR',
+ momStepping=.FALSE.,
+ tempStepping=.FALSE.,
+ saltStepping=.FALSE.,
+ readBinaryPrec=64,
+ writeBinaryPrec=64,
+ hFacMin=.05,
+ hFacMindz=50.,
+ debugLevel=0,
+ momstepping=.FALSE.,
+ tempstepping=.FALSE.,
+ saltstepping=.FALSE.,
+# hFacMindr=50.,
+#ph(
+# globalFiles=.true.,
+ useSingleCpuIO=.TRUE.
+#ph)
+ &
+# Elliptic solver parameters
+ &PARM02
+ cg2dMaxIters=1000,
+ cg2dTargetResidual=1.E-10,
+ &
+# Time stepping parameters
+ &PARM03
+# startTime=0,
+# niter0=40,
+ nTimesteps=1,
+ deltaT=1296000.0,
+# externForcingCycle=19710000.0,
+# forcing cycle + 1/3
+# abEps=0.1,
+ pChkptFreq=3888000.0,
+ chkptFreq=3888000.0,
+# dumpFreq=315360000.0,
+ monitorFreq=0.,
+ dumpInitAndLast=.false.
+ &
+# Gridding parameters
+ &PARM04
+ usingCartesianGrid=.TRUE.,
+ usingSphericalPolarGrid=.FALSE.,
+# selectSigmaCoord=1
+# delX=728*1000.,
+# delY=1020*1000.,
+ delZ=20*100.,
+ delxfile = 'delX.bin',
+ delyfile = 'delY.bin',
+# delX=480*985.3125
+# delY=720*1036.9
+ &
+ &PARM05
+ bathyFile = 'faketopog.bin',
+# hydrogThetaFile=,
+# hydrogSaltFile=,
+# zonalWindFile='windx.sin_y',
+# meridWindFile=,
+# mdsioLocalDir='runtemp',
+# adtapeDir='/exports/work/scratch/dgoldber/build_smith_450/adTapeDir'
+ &

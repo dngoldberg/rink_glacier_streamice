@@ -1,0 +1,262 @@
+C $Header: /u/gcmpack/MITgcm_contrib/dgoldberg/code_ad_flowline/cost_test.F,v 1.1 2012/07/20 13:42:08 heimbach Exp $
+C $Name:  $
+
+#ifdef ALLOW_COST
+#include "COST_OPTIONS.h"
+#endif
+#include "STREAMICE_OPTIONS.h"
+
+      subroutine cost_test( myThid )
+C     /==========================================================\
+C     | subroutine cost_test                                     |
+C     | o this routine computes the cost function for the tiles  |
+C     |   of this processor                                      |
+C     |==========================================================|
+C     |                                                          |
+C     | Notes                                                    |
+C     | =====                                                    |
+C     \==========================================================/
+      IMPLICIT NONE
+
+C     == Global variables ===
+#include "SIZE.h"
+#include "EEPARAMS.h"
+#include "PARAMS.h"
+#include "DYNVARS.h"
+#include "GRID.h"
+#ifdef ALLOW_STREAMICE
+# include "STREAMICE.h"
+#endif
+
+#ifdef ALLOW_COST
+#include "cost.h"
+#endif
+
+C     == Routine arguments ==
+C     myThid - Thread number for this instance of the routine.
+      integer bi, bj
+      integer myThid
+
+#ifdef ALLOW_COST_TEST
+C     == Local variables
+      _RL thetaRef, HAF
+
+      integer i, j, k
+      integer ig, jg
+      integer itlo,ithi
+      integer jtlo,jthi
+      _RL i_numcells, dCdx, dCdy, dBdx, dBdy, dmdx, dmdy, idt
+      _RL utmp, vtmp, uotmp, votmp, cotmp, dhdt, dhdt_fac
+      _RL dRdx, dRdy
+      INTEGER  ILNBLNK
+      EXTERNAL ILNBLNK
+      CHARACTER*(MAX_LEN_FNAM) STREAMICExvelOptimFile
+      CHARACTER*(MAX_LEN_FNAM) STREAMICEyvelOptimFile
+      _RL U_obs (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL V_obs (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL U_err (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+      _RL R0 (1-OLx:sNx+OLx,1-OLy:sNy+OLy,nSx,nSy)
+
+      _RL smooth_cost_fric  (nSx,nSy)
+      _RL smooth_cost_prior (nSx,nSy)
+      _RL smooth_cost_bglen (nSx,nSy)
+      _RL smooth_cost_bed (nSx,nSy)
+      _RL cost_misfit (nSx,nSy)
+      _RL cost_misfit_norm (nSx,nSy)
+      _RL cost_thin (nSx,nSy)
+
+
+      _RL smooth_cost_fric_gl, smooth_cost_prior_gl,
+     &    smooth_cost_bglen_gl, cost_misfit_gl, cost_misfit_norm_gl,
+     &    smooth_cost_bed_gl, cost_thin_gl
+      _RL rhoi, rhow, r, i_r, h, hf, tot_area, itot_area
+
+
+      jtlo = mybylo(mythid)
+      jthi = mybyhi(mythid)
+      itlo = mybxlo(mythid)
+      ithi = mybxhi(mythid)
+
+      tot_area = Nx*Ny*1E6
+      itot_area = 1./tot_area
+
+      i_numcells = 1.0/(Nx*Ny)
+      idt = 1.0/deltaT*365.0*86400.0
+
+      STREAMICExvelOptimFile=
+     & STREAMICEvelOptimFile(1:
+     & ILNBLNK(STREAMICEvelOptimFile))//"u.bin"
+      STREAMICEyvelOptimFile=
+     & STREAMICEvelOptimFile(1:
+     & ILNBLNK(STREAMICEvelOptimFile))//"v.bin"
+
+      _BARRIER
+
+      CALL READ_FLD_XY_RL( STREAMICExvelOptimFile, ' ', 
+     &      U_obs, 0, myThid )
+      print *, 'GOT HERE read velobsu'
+      CALL READ_FLD_XY_RL( STREAMICEyvelOptimFile, ' ', 
+     &      V_obs, 0, myThid )
+      print *, 'GOT HERE read velobsv'
+      CALL READ_FLD_XY_RL( 'errU.box', ' ',
+     &      U_err, 0, myThid )
+      print *, 'GOT HERE read uerr'
+      CALL READ_FLD_XY_RL(STREAMICEtopogFile, ' ',
+     &      R0, 0, myThid )
+      print *, 'GOT HERE read topo file'
+
+      _EXCH_XY_RL (R0, mythid)
+
+
+C--   Calculate mask for tracer cells  (0 => land, 1 => water)
+!       k=1
+
+C--   Calculate cost function on tile of this instance
+
+      rhoi = streamice_density
+      rhow = streamice_density_ocean_avg
+      r=rhoi/rhow
+      i_r = 1/r
+
+      do bj = jtlo,jthi
+        do bi = itlo,ithi
+
+          smooth_cost_fric (bi,bj) = 0.0
+          smooth_cost_bglen (bi,bj) = 0.0
+          smooth_cost_prior (bi,bj) = 0.0
+          cost_misfit (bi,bj) = 0.0
+          cost_misfit_norm (bi,bj) = 0.0
+          cost_thin (bi,bj) = 0.0
+          smooth_cost_bed (bi,bj) = 0.0
+
+          do j=1,sNy
+            do i=1,sNx
+
+              dCdx = (C_basal_friction(i+1,j,bi,bj)-
+     &               C_basal_friction(i,j,bi,bj)) /
+     &              (dxC(i+1,j,bi,bj))
+              dCdy = (C_basal_friction(i,j+1,bi,bj)-
+     &               C_basal_friction(i,j,bi,bj)) /
+     &               (dyC(i,j+1,bi,bj))
+
+              dBdx = (B_glen(i+1,j,bi,bj)-
+     &               B_glen(i,j,bi,bj)) /
+     &              (dxC(i+1,j,bi,bj))
+              dBdy = (B_glen(i,j+1,bi,bj)-
+     &               B_glen(i,j,bi,bj)) /
+     &               (dyC(i,j+1,bi,bj))
+
+              utmp = streamice_u_surf(i,j,bi,bj)
+              vtmp = streamice_v_surf(i,j,bi,bj)
+              uotmp = U_obs(i,j,bi,bj)
+              votmp = V_obs(i,j,bi,bj)
+              cotmp = sqrt(uotmp**2+votmp**2)
+
+              IF(cotmp.ne.0.0 .and. uotmp.gt.-9990 .and. 
+     &          streamice_hmask(i,j,bi,bj).eq.1.0) THEN
+
+
+                objf_test (bi,bj) = objf_test (bi,bj) + 
+     &          i_numcells * 
+     &          ((
+     &          0.5 * (streamice_u_surf(i,j,bi,bj)-
+     &               U_obs(i,j,bi,bj))**2 + 
+     &          0.5 * (streamice_v_surf(i,j,bi,bj)-
+     &               V_obs(i,j,bi,bj))**2)
+     &          / ((1 + U_err(i,j,bi,bj)**2)))
+     &          
+
+                objf_test (bi,bj) = objf_test (bi,bj) +
+     &          i_numcells *
+     &          (2.e2*((
+     &          0.5 * (streamice_u_surf(i,j,bi,bj)-
+     &               U_obs(i,j,bi,bj))**2 +
+     &          0.5 * (streamice_v_surf(i,j,bi,bj)-
+     &               V_obs(i,j,bi,bj))**2) 
+     &          / (U_err(i,j,bi,bj)**2 + U_obs(i,j,bi,bj)**2 +
+     &               V_obs(i,j,bi,bj)**2)))
+
+
+                cost_misfit (bi,bj) = cost_misfit (bi,bj) + 
+     &          i_numcells *
+     &          ((
+     &          0.5 * (streamice_u_surf(i,j,bi,bj)-
+     &               U_obs(i,j,bi,bj))**2 +
+     &          0.5 * (streamice_v_surf(i,j,bi,bj)-
+     &               V_obs(i,j,bi,bj))**2)
+     &          / ((1 + U_err(i,j,bi,bj)**2)))
+
+
+                cost_misfit_norm (bi,bj) = cost_misfit_norm (bi,bj) +
+     &          i_numcells *
+     &          (2.e2*((
+     &          0.5 * (streamice_u_surf(i,j,bi,bj)-
+     &               U_obs(i,j,bi,bj))**2 +
+     &          0.5 * (streamice_v_surf(i,j,bi,bj)-
+     &               V_obs(i,j,bi,bj))**2) 
+     &          / (U_err(i,j,bi,bj)**2 + U_obs(i,j,bi,bj)**2 +
+     &               V_obs(i,j,bi,bj)**2)))
+
+              ENDIF
+
+              h = H_streamice(i,j,bi,bj)
+              hf = -1.0 * i_r * R_low_si (i,j,bi,bj)
+ 
+
+              IF (streamice_hmask(i,j,bi,bj).eq.1.0) then
+                objf_test (bi,bj) = objf_test (bi,bj) +
+     &          i_numcells * 
+     &          streamice_wgt_vel * (dCdx**2+dCdy**2) 
+
+                smooth_cost_fric (bi,bj) = smooth_cost_fric (bi,bj) +
+     &          i_numcells * 
+     &          streamice_wgt_vel * (dCdx**2+dCdy**2) 
+
+                objf_test (bi,bj) = objf_test (bi,bj) +
+     &          i_numcells * 
+     &          streamice_wgt_tikh * (dBdx**2+dBdy**2) 
+
+                smooth_cost_bglen (bi,bj) = smooth_cost_bglen (bi,bj) +
+     &          i_numcells * 
+     &          streamice_wgt_tikh * (dBdx**2+dBdy**2) 
+              ENDIF
+
+            end do
+          end do
+        end do
+      end do
+
+      CALL GLOBAL_SUM_TILE_RL
+     &   ( smooth_cost_fric, smooth_cost_fric_gl, myThid )
+      CALL GLOBAL_SUM_TILE_RL
+     &   ( smooth_cost_bglen, smooth_cost_bglen_gl, myThid )
+      CALL GLOBAL_SUM_TILE_RL
+     &   ( smooth_cost_bed, smooth_cost_bed_gl, myThid )
+      CALL GLOBAL_SUM_TILE_RL
+     &   ( smooth_cost_prior, smooth_cost_prior_gl, myThid )
+      CALL GLOBAL_SUM_TILE_RL
+     &   ( cost_misfit, cost_misfit_gl, myThid )
+      CALL GLOBAL_SUM_TILE_RL
+     &   ( cost_misfit_norm, cost_misfit_norm_gl, myThid )
+      CALL GLOBAL_SUM_TILE_RL
+     &   ( cost_thin, cost_thin_gl, myThid )
+
+      write(standardmessageunit,'(A,D22.15)') 'fric smooth contr = ', 
+     &   smooth_cost_fric_gl
+      write(standardmessageunit,'(A,D22.15)') 'bglen smooth contr = ', 
+     &   smooth_cost_bglen_gl
+      write(standardmessageunit,'(A,D22.15)') 'prior smooth contr = ', 
+     &   smooth_cost_prior_gl
+      write(standardmessageunit,'(A,D22.15)') 'bed smooth contr = ', 
+     &   smooth_cost_bed_gl
+      write(standardmessageunit,'(A,D22.15)') 'vel misfit = ', 
+     &   cost_misfit_gl
+      write(standardmessageunit,'(A,D22.15)') 'vel misfit norm  = ',
+     &   cost_misfit_norm_gl
+      write(standardmessageunit,'(A,D22.15)') 'thinning contr = ', 
+     &   cost_thin_gl
+
+#endif
+
+      RETURN
+      END

@@ -1,0 +1,12 @@
+#!/bin/csh
+#echo "GOT HERE add0upto3c"
+set xx = '000'$1
+set yy = `echo $xx | sed 's/^...$/aaa/'`
+
+while ( $yy != 'aaa' )
+ set xx = `echo $xx | sed 's/^0//'` 
+ set yy = `echo $xx | sed 's/^...$/aaa/'`
+ # echo $xx $yy
+end
+echo $xx
+exit
