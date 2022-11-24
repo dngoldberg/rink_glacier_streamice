@@ -76,7 +76,7 @@ thick = thick_mod;
 % ice-ocean boundaries have a calving front stress condition
 % ice-"out of domain" boundaries have no-slip (zero velocity) conditions
 %
-% MASK is -1 where ice is less then 5m (to avoid ill conditioning)
+% MASK is -1 where ice is less then 2m (to avoid ill conditioning)
 % 
 
 hmask = zeros(size(thick));
@@ -98,6 +98,7 @@ if (length(pp)>1);
  end;
 end;
 
+% this field is not used -- but demonstrates how to define the B field for isothermal ice
 Aglen = apaterson(-10) * 31104000;
 Bglen = Aglen.^(-1/3);
 Bbar = sqrt(mean(Bglen,3)) * ones(size(thick));
