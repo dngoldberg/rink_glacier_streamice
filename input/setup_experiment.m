@@ -1,13 +1,23 @@
 function setup_experiment(nx,ny,gx,gy);
+% this function creates a set of input files for use with STREAMICE
+% it is meant to be called by gen_mesh.m
+% nx, ny -- columns and rows of computational grid
+% gx, gy -- padding to ensure all tiles have same size
+% note files created will be of size (nx+gx, ny+gy)
+
 load rink_data
 filter_surf = false;
 
+%%% THESE VALUES SHOULD BE CONSISTENT WITH data.streamice
 density_ice = 917;
 density_oce = 1027;
 
 [X Y] = meshgrid(x_mesh_mid,y_mesh_mid);
 
 %% interpolate all data to grid
+
+
+%%% PREPARE VELOCITY CONSTRAINTS
 
 vmask = (v>0);
 vmask_interp = interp2(xmeas,ymeas',double(vmask),x_mesh_mid,y_mesh_mid');
@@ -21,6 +31,11 @@ verr(vmask_interp<1) = -99999;
 
 xbm = double(xbm);
 ybm = double(ybm);
+
+%%% PREPARE THICKNESS BASED ON SURFACE, BED and DENSITIES
+
+%%% Note, a gaussian filter is applied to the surface but only has an effect
+%%% where topography is extremely variable
 
 surf = interp2(xbm,ybm',double(surf),x_mesh_mid,y_mesh_mid');
 surf(surf<0)=0;
