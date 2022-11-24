@@ -48,7 +48,7 @@ ln ../$code_dir/cost_test.F.snap_noBglen ../$code_dir/cost_test.F
 
 
 make CLEAN
-$ROOTDIR/tools/genmake2 -mods='../code' -of=/home/n02/n02/dngoldbe/own_scripts/dev_linux_amd64_cray_archer2_oad -oad -mpi --oadsingularity "$sing_str"
+$ROOTDIR/tools/genmake2 -mods='../code' -of=dev_linux_amd64_cray_archer2_oad -oad -mpi --oadsingularity "$sing_str"
 #$ROOTDIR/tools/genmake2 -ieee -mods='../code ../newcode' -of=$ROOTDIR/tools/build_options/linux_amd64_gfortran -mpi
 #$ROOTDIR/tools/genmake2 -mods='../code' -mpi
 ln -s $PETSCDIR/include/*.mod .

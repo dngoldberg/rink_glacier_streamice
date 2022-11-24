@@ -1,0 +1,58 @@
+#!/bin/bash
+#
+# To be used with the suite of GCC compilers (PrgEnv-gnu).
+
+CC='cc'
+CPP="CC"
+FC='ftn'
+F90C='ftn'
+F90FIXEDFORMAT='-ffixed-form -ffixed-form -w -fallow-argument-mismatch -mcmodel=medium'
+
+
+DEFINES='-DWORDLENGTH=4 -D_BYTESWAPIO -DHAVE_LAPACK -DNML_TERMINATOR'
+CPP='cpp -traditional -P'
+EXTENDED_SRC_FLAG='-Mextend'
+GET_FC_VERSION="--version"
+CHECK_FOR_LAPACK=t
+FC_CHECK=f
+
+INCLUDES='-I${NETCDF_DIR}/include -I/opt/cray/pe/mpich/8.1.4/ofi/gnu/9.1/include'
+LIBS='-L${NETCDF_DIR}/lib -L/opt/cray/pe/mpich/8.1.4/ofi/gnu/9.1/lib'
+
+### DNG ADDED THESE LINES
+#INCLUDES="$INCLUDES -I/work/n02/shared/MITgcm/PETSc/petsc/include/petsc/finclude"
+
+INCLUDES="$INCLUDES -I/work/n02/n02/dngoldbe/petsc/include/petsc"
+INCLUDES="$INCLUDES -I/work/n02/n02/dngoldbe/petsc/include"
+
+LIBS="$LIBS -L/work/n02/n02/dngoldbe/petsc/lib -lpetsc -lHYPRE -lcmumps -ldmumps -lesmumps -lsmumps -lzmumps -lmumps_common -lptesmumps -lesmumps -lpord -lsuperlu -lsuperlu_dist -lptscotch -lscotch -lptscotcherr -lscotcherr -lparmetis -lmetis -lm -lstdc++"
+###
+
+NOOPTFLAGS='-O0'
+NOOPTFILES=''
+
+FFLAGS='-fallow-argument-mismatch -I/work/n02/n02/dngoldbe/petsc/include'  
+
+if test "x${MITGCM_FFLAGS}" != "x"; then
+	            # set flags in case_setup
+
+            FOPTIM=$MITGCM_FFLAGS
+
+elif test "x$IEEE" = x ; then   #- with optimisation:
+    FOPTIM='-O3'
+else
+    if test "x$DEVEL" = x ; then  #- no optimisation + IEEE :
+      FOPTIM='-O0'
+    else                          #- development/check options:
+      FOPTIM='-O0 -g'
+    fi
+fi
+
+# added following truncation errors in TAF
+# need retest ECCO without TAF
+
+FFLAGS="$FFLAGS -mcmodel=medium"
+CFLAGS="$CFLAGS -mcmodel=medium"
+
+
+
