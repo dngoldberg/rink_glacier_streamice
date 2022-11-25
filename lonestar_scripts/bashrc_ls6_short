@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+### ls6 specific ###
+module purge 
+module load TACC
+module load intel/19.1.1 impi/19.0.9
+module load netcdf/4.6.2
+#module load git
+#result of module spider netcdf
+#     Add the following options to the link step for C codes:
+#        -L${TACC_NETCDF_LIB} -lnetcdf
+#      Add the following options to the link step for Fortran codes:
+#        -L${TACC_NETCDF_LIB} -lnetcdf -lnetcdff
+#      Add the following options to the link step for C++ codes:
+#        -L${TACC_NETCDF_LIB} -lnetcdf -lnetcdf_c++4
+
+### MITgcm stuff 
+export MPI_INC_DIR=$TACC_IMPI_INC
+export NETCDF_BIN=$TACC_NETCDF_BIN
+export NETCDF_ROOT=$TACC_NETCDF_DIR
+export NETCDF_INC=$TACC_NETCDF_INC
+export NETCDF_LIB=$TACC_NETCDF_LIB
+
+### Permissions
+umask 027
+
+## Increase stack size
+ulimit -s hard
+ulimit -u hard
+
+### Expand environment variables in tab completion ###
+shopt -s direxpand
+
+### Add staf to path ### 
+PATH=$PATH:$HOME/bin:$HOME/local/bin
+
+### Other
+
+alias date='date +%Y/%m/%d" "%T.%N'
+alias mlload='module load matlab'
+alias ml='matlab -nodesktop -nosplash'
+alias ml1='matlab -nosplash &'
+alias qquota='/usr/local/etc/taccinfo'
+
+#need line below to avoid warning everytime we type a command
+__vte_prompt_command() { true; }
+
