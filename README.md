@@ -9,3 +9,7 @@ A set of input files, shell scripts of code to manage the simulation of a sectio
 
 **Note: this readme is a placeholder for a more extensive wiki that will evolve over time.**
 
+
+![This is an image](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/modelled_rink.png)
+![This is an image](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/itslive_rink.png)
+![This is an image](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/itslive_model_diff_rink.png)
