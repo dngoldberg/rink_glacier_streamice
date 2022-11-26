@@ -23,7 +23,21 @@ This experiment models a section of West Greenland containing Rink, Inngia and U
 
 The input folder contains 3 matlab files:
 - `snip.m` defines the domain and the grid locations, and subsets the ITS_LIVE and BM-Greenland files for easier use later on.
-- `gen_mesh.m` defines the number of cpus (`npx` and `npy`), determines the size of the computational domain (i.e. by "padding" noncomputational cells to ensure the appropriate tile size)
+- `gen_mesh.m` defines the number of cpus (`npx` and `npy`), determines the size of the computational domain (i.e. by "padding" noncomputational cells to ensure the appropriate tile size). Calls `setup_experiment.m`
+- `setup_experiment.m`. Creates binary input files needed for experiment. 
+
+The order of processing is (i) `snip.m`, (ii) `gen_mesh.m`.
+
+Additionally the input folder contains the parameter input files needed. Note the parameters in `data.streamice` are explained [here](https://mitgcm.readthedocs.io/en/latest/phys_pkgs/streamice.html).
+
+### Compiling on TACC resources.
+
+TBC.
+
+### Running on TACC resources.
+
+TBC
+
 
 
 Goldberg, D N (2011). A variationally-derived, depth-integrated approximation to the Blatter/Pattyn balance. J. of Glaciology, 57, 157-170.
