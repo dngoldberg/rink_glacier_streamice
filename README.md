@@ -11,9 +11,9 @@ A set of input files, shell scripts of code to manage the simulation of a sectio
 
 This experiment models a section of West Greenland containing Rink, Inngia and Umiammakku Isbrae using the STREAMICE package of MITgcm. A resolution of 600m in a polar stereographic reference grid is used. The geometry of the model (surface elevation and bed elevation) are interpolated from BedMachine Greenland, with "islands" of ice removed. A hybrid stress balance (Goldberg, 2010) is used, with a coulomb-limited velocity-dependent sliding law (Cornford et al, 2020). The ITS_LIVE velocity mosaic is used as a constraint in a control method inversion. The control parameters are $\beta$, the square root of the sliding coefficient, and $\overline{B}$, the vertically averaged ice-sheet stiffness parameter (equivalent to $A^{-1/3}$ where $A$ is Glen's coefficient). An uniform initial guess is used for each; there is no constraint for $\overline{B}$ to match, or be informed by, ice-sheet temperature. Below the results of this inversion are shown: the modelled, observed speed and the difference.
 
-![Modelled speed](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/modelled_rink.png)
-![Observed speed](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/itslive_rink.png)
-![Difference](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/itslive_model_diff_rink.png)
+[Modelled speed](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/modelled_rink.png)
+[Observed speed](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/itslive_rink.png)
+[Difference](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/itslive_model_diff_rink.png)
 
 Goldberg, D N (2011). A variationally-derived, depth-integrated approximation to the Blatter/Pattyn balance. J. of Glaciology, 57, 157-170.
 
