@@ -30,6 +30,7 @@ FFLAGS="$FFLAGS -W0 -WB -convert big_endian -assume byterecl"
 FFLAGS="$FFLAGS -fPIC"
 FFLAGS="$FFLAGS -mcmodel=large -shared-intel"
 FFLAGS="$FFLAGS -132" # extend to 132 columns
+FFLAGS="$FFLAGS -I${PETSC_DIR}/include -I${PETSC_DIR}/milan-uni/include"
 
 if test "x$IEEE" = x ; then
     FOPTIM="-align -traceback       -O3 -ip -ftz -fp-model precise"
@@ -48,6 +49,7 @@ F90OPTIM=$FOPTIM
 CFLAGS="-O3 -ip -fPIC"
 
 INCLUDEDIRS="${TACC_IMPI_INC} ${TACC_NETCDF_INC}"
-INCLUDES="-I${TACC_IMPI_INC} -I${TACC_NETCDF_INC}"
+INCLUDES="-I${TACC_IMPI_INC} -I${TACC_NETCDF_INC} -I${PETSC_DIR}/include -I${PETSC_DIR}/include/petsc -I${PETSC_DIR}/milan-uni/include"
 LIBS="-L${TACC_IMPI_LIB}/release -L${TACC_IMPI_LIB} -lmpi -lmpifort -L${TACC_NETCDF_LIB} -lnetcdf -lnetcdff"
+LIBS="$LIBS -L${PETSC_DIR}/milan-uni/lib -lpetsc -lm -lstdc++"
 MPIINCLUDEDIR="${TACC_IMPI_INC}"
