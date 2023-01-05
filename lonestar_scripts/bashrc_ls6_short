@@ -45,4 +45,4 @@ alias qquota='/usr/local/etc/taccinfo'
 
 #need line below to avoid warning everytime we type a command
 __vte_prompt_command() { true; }
-
+export ROOTDIR=/work/09208/dgoldber/ls6/MITgcm

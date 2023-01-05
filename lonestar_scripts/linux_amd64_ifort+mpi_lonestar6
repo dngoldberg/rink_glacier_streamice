@@ -33,7 +33,7 @@ FFLAGS="$FFLAGS -132" # extend to 132 columns
 FFLAGS="$FFLAGS -I${PETSC_DIR}/include -I${PETSC_DIR}/milan-uni/include"
 
 if test "x$IEEE" = x ; then
-    FOPTIM="-align -traceback       -O3 -ip -ftz -fp-model precise"
+    FOPTIM="-align -traceback       -O2 -ip -ftz -fp-model precise"
     NOOPTFILES='obcs_set_connect.F obcs_init_fixed.F'
 else
     if test "x$DEVEL" = x ; then
