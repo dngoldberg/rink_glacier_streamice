@@ -45,4 +45,11 @@ alias qquota='/usr/local/etc/taccinfo'
 
 #need line below to avoid warning everytime we type a command
 __vte_prompt_command() { true; }
+# below should be modified to point to your own MITgcm folder on /work
 export ROOTDIR=/work/09208/dgoldber/ls6/MITgcm
+alias wk="cd $WORK"
+# below should be set to your username
+alias qstat="squeue -u dgoldber"
+export OWN_PETSC_DIR="$WORK/petsc-3.14.2"
+# below should be modified to reflect your own work directory
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/work/09208/dgoldber/ls6/petsc-3.14.2/arch-linux-c-opt/lib

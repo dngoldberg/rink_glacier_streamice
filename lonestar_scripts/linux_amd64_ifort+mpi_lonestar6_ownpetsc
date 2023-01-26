@@ -13,10 +13,9 @@
 # This optfile then gives successful compilation of ECCOv4r4 & ASTE
 
 CC=icc
-FC=ifort
-F90C=ifort
+FC=mpiifort
+F90C=mpiifort
 LINK="$F90C -no-ipo"
-PETSC_DIR=$OWN_PETSC_DIR
 
 DEFINES='-DALLOW_USE_MPI -DALWAYS_USE_MPI -DWORDLENGTH=4'
 CPP='cpp -traditional -P'
@@ -31,7 +30,7 @@ FFLAGS="$FFLAGS -W0 -WB -convert big_endian -assume byterecl"
 FFLAGS="$FFLAGS -fPIC"
 FFLAGS="$FFLAGS -mcmodel=large -shared-intel"
 FFLAGS="$FFLAGS -132" # extend to 132 columns
-FFLAGS="$FFLAGS -I${PETSC_DIR}/include -I${PETSC_DIR}/milan-unidebug/include"
+FFLAGS="$FFLAGS -I${PETSC_DIR}/include"
 
 if test "x$IEEE" = x ; then
     FOPTIM="-align -traceback       -O2 -ip -ftz -fp-model precise"
@@ -48,9 +47,9 @@ fi
 F90FLAGS=$FFLAGS
 F90OPTIM=$FOPTIM
 CFLAGS="-O3 -ip -fPIC"
-
+PETSC_DIR=$OWN_PETSC_DIR
 INCLUDEDIRS="${TACC_IMPI_INC} ${TACC_NETCDF_INC}"
-INCLUDES="-I${TACC_IMPI_INC} -I${TACC_NETCDF_INC} -I${PETSC_DIR}/include -I${PETSC_DIR}/include/petsc 
+INCLUDES="-I${TACC_IMPI_INC} -I${TACC_NETCDF_INC} -I${PETSC_DIR}/include -I${PETSC_DIR}/include/petsc -I${PETSC_DIR}/arch-linux-c-opt/include"
 LIBS="-L${TACC_IMPI_LIB}/release -L${TACC_IMPI_LIB} -lmpi -lmpifort"
-#LIBS="$LIBS -L${PETSC_DIR}/milan-unidebug/lib -lpetsc -lm -lstdc++"
+LIBS="$LIBS -L${PETSC_DIR}/arch-linux-c-opt/lib -lpetsc -lm -lstdc++"
 MPIINCLUDEDIR="${TACC_IMPI_INC}"

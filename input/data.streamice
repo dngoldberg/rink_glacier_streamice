@@ -52,7 +52,7 @@
  &STREAMICE_PARMPETSC
  PETSC_SOLVER_TYPE = 'CG',
  PETSC_PRECOND_TYPE = 'BLOCKJACOBI',
- streamice_use_petsc = .false. 
+ streamice_use_petsc = .true. 
  streamice_petsc_pcfactorlevels=6
  &
 
