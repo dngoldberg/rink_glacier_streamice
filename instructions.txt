@@ -1,0 +1,47 @@
+GET ACCOUNT ON LONESTAR6
+=======================
+
+i. go to https://portal.tacc.utexas.edu/ and create a TACC account. 
+ii. Be sure to enable multi factor authentication (i use google authentication app)
+iii. Get owner (Ginny) to add you to project DPP22001.
+iv. Read the lonestar6 documentation regarding how to log in via a terminal.
+
+SET UP YOUR ENVIRONMENT AND WORK FOLDER ON LONESTAR 6
+=======================================================
+
+Once you log in, your current directory will be on the Login node. You should do everything on the drive $WORK, which will map to your own /work directory. 
+
+PETSc is a computational library that if made use of can speed up STREAMICE by 2x to 3x. The TACC versions are configured incorrectly so we need to install our own version.
+
+A. get the code / scripts / input repo for rink:
+
+cd $WORK
+git clone https://github.com/dngoldberg/rink_glacier_streamice.git
+
+B. replace your bash configuration file. In rink_glacier_streamice/lonestar_scripts, there is a file called "bashrc_ls6_short". Open this file in vi, there are prompts to make some modifications for certain paths. Do this, and then save file file and replace your bashrc with the following:
+
+cp bashrc_ls6_short ~/.bashrc
+
+C. INSTALL PETSC.
+
+I recommend 3.14.2 as i know it works. Do the following steps to install.
+
+1. cd $WORK
+2. wget https://www.mcs.anl.gov/petsc/mirror/release-snapshots/petsc-3.14.2.tar.gz
+3. tar -xzvf petsc-3.14.2.tar.gz
+4. cd petsc-3.14.2
+5. ./configure --configModules=PETSc.Configure --optionsModule=config.compilerOptions --known-mpi-c-double-complex=1 --with-ar=ar --with-batch=0 --with-cc=mpicc --with-clib-autodetect=1 --with-cxx=mpicc --with-cxxlib-autodetect=1 --with-debugging=0 --with-dependencies=0 --with-fc=mpiifort --with-fortran-datatypes=1 --with-fortran-interfaces=1 --with-fortran-bindings=1 --with-fortranlib-autodetect=1 --with-ranlib=ranlib --with-scalar-type=real --with-shared-ld=ar --with-etags=0 --with-x=0 --with-ssl=0 --with-shared-libraries=1 --with-blaslapack=1 --with-scalapack=1 --with-mumps=0
+
+At this point, you will not be able to compile correctly unless you are on a compute node. The next step will begin a short interactive session on a compute node. You will eventually get a command prompt again.
+
+6. idev -A DPP22001 -p vm-small
+7. make all
+8. make test
+9. exit 
+
+this last step ensures you are off the compute node, which eats into our allocation!
+
+
+BUILD THE RINK INVERSION EXPERIMENT
+==================================
+
