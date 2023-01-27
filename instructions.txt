@@ -45,3 +45,29 @@ this last step ensures you are off the compute node, which eats into our allocat
 BUILD THE RINK INVERSION EXPERIMENT
 ==================================
 
+In order to build the adjoint model, we need OpenAD. And, in order to run OpenAD, we need singularity. Think of Singularity as a "virtual machine" even though it is actually a virtual operating system, which is something different. MITgcm will be compiled within this "virtual machine" but the result will be simply a program which can be run on the *actual* computer. TACC computers have singularity installed, but it is only available on compute nodes.
+
+1. Obtaining the singularity container. 
+
+i. launch an interactive batch: 
+idev -A DPP22001 -p vm-small
+
+ii. navigate (cd) to a place on $WORK where you will store the OpenAD "container" file. You do not need to do anything else with this file, the scripts you run will use it. Maybe create a folder under $WORK called "openad", and within the folder do the following command:
+singularity pull library://jahn/default/openad:latest
+
+now, you can end the interactive batch, and pick up later when you are ready to compile..
+
+2. Building the executable
+
+i. go to the folder lonestar_scripts/ and open make_ls6.sh. At line 21, there is a variable that should be set to the path to your openad container that you downloaded above. make this change.
+
+ii. Now once again start an interactive batch, and, in lonestar_scripts run the command
+bash make_ls6.sh.
+
+You will now need to wait 7-10 minutes for the process to complete. This is because (a) OpenAD differentiation to generate new code files is very slow, and (b) the compilation of the resulting code needs to run in a single thread, which is really the fault of MITgcm developers. 
+
+We are hopeful within the year that we can use Tapenade rather than OpenAD, which will mean no singularity, no interactive batch, and shorter compilation time. Patrick's student Shreyas is working on this and would be a good contact if you wish to know more about automatic differentiation.
+
+
+RUNNING THE INVERSION
+=====================
