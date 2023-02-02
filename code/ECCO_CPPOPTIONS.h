@@ -31,7 +31,8 @@ C ***                Cost function Package                         ***
 C ********************************************************************
 
 C       >>> Cost function contributions
-#define ALLOW_COST_TEST
+#undef ALLOW_COST_TEST
+#define ALLOW_COST_STREAMICE
 
 C ********************************************************************
 C ***               Control vector Package                         ***

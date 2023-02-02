@@ -125,7 +125,7 @@ vy = [[vy zeros(ny,gx)];zeros(gy,nx+gx)];
 binwrite('velobsv.bin',vy');
 
 verr = [[verr zeros(ny,gx)];zeros(gy,nx+gx)];
-binwrite('errU.box',verr');
+binwrite('velobserr.box',verr');
 
 binwrite('ufacemask.bin',-1*ones(size(verr))');
 binwrite('vfacemask.bin',-1*ones(size(verr))');

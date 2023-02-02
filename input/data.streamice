@@ -32,12 +32,11 @@
  STREAMICEthickInit='FILE',
  STREAMICEtopogFile = 'topog.bin',
  streamicethickFile = 'BedMachineThick.bin',
- STREAMICEglenconstfile = 'BglenPattyn.bin',
- STREAMICEbasaltracFile = 'Beta2009_30.bin',
+ STREAMICEglenconstfile = '',
+ STREAMICEbasaltracFile = '',
  streamicehmaskfile = 'hmask.bin',
  STREAMICEuFaceBdryFile = 'ufacemask.bin',
  STREAMICEvFaceBdryFile = 'vfacemask.bin',
- STREAMICEvelOptimFile = 'velobs',
  STREAMICE_diagnostic_only=.true.,
  streamice_wgt_vel = 1e6
  streamice_wgt_tikh = 1e6
@@ -60,6 +59,23 @@
  streamice_nonlin_tol_adjoint_rl = 1.e-2,
  STREAMICE_OAD_petsc_reuse=.true.,
  PETSC_PRECOND_OAD='BLOCKJACOBI'
+ &
+
+ &STREAMICE_COST
+ streamice_wgt_vel = 1.0
+ streamice_wgt_vel_norm = 1.e1
+ streamice_wgt_tikh_bglen = 1.e6
+ streamice_wgt_tikh_beta = 1.e6
+ streamice_wgt_surf = 0.
+ streamice_wgt_prior_bglen = 0.
+ STREAMICEvelOptimTCBasename = ''
+ STREAMICEvelOptimSnapBasename = 'velobs'
+ STREAMICEsurfOptimTCBasename = ''
+ STREAMICEBglenCostMaskFile = ''
+ STREAMICE_do_timedep_cost = .false.
+ STREAMICE_do_snapshot_cost = .true.
+ streamice_vel_cost_timesteps = 
+ streamice_surf_cost_timesteps = 
  &
 
  &STREAMICE_PARM03

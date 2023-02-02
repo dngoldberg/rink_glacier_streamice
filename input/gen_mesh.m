@@ -1,7 +1,7 @@
 % This script 
 
-npx = 12; % number of x-processors to use (nPx in SIZE.h)
-npy = 4;  % number of y-processors to use (nPy in SIZE.h)
+npx = 18; % number of x-processors to use (nPx in SIZE.h)
+npy = 6;  % number of y-processors to use (nPy in SIZE.h)
 
 load rink_data.mat
 
