@@ -38,10 +38,6 @@
  STREAMICEuFaceBdryFile = 'ufacemask.bin',
  STREAMICEvFaceBdryFile = 'vfacemask.bin',
  STREAMICE_diagnostic_only=.true.,
- streamice_wgt_vel = 1e6
- streamice_wgt_tikh = 1e6
- streamice_wgt_drift = 1.e-2
- streamice_wgt_surf = 0.0
  streamice_allow_reg_coulomb = .true.
  &
 
@@ -74,8 +70,8 @@
  STREAMICEBglenCostMaskFile = ''
  STREAMICE_do_timedep_cost = .false.
  STREAMICE_do_snapshot_cost = .true.
- streamice_vel_cost_timesteps = 
- streamice_surf_cost_timesteps = 
+# streamice_vel_cost_timesteps = 
+# streamice_surf_cost_timesteps = 
  &
 
  &STREAMICE_PARM03

@@ -8,6 +8,10 @@ module load tacc-singularity
 build_dir=build
 code_dir=code
 
+cd $ROOTDIR
+git checkout branch_controls_snap_tc
+cd $OLDPWD
+
 if [ -d "../$build_dir" ]; then
   cd ../$build_dir
   rm -rf *
@@ -22,6 +26,7 @@ sing_str="/work/09208/dgoldber/ls6/openad/openad.sif"
 
 rm ../$code_dir/cost_test.F
 ln ../$code_dir/cost_test.F.snap_noBglen ../$code_dir/cost_test.F
+
 
 
 make CLEAN

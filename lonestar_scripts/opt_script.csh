@@ -37,7 +37,7 @@ do
 # mpirun -n $nprocs ./new.csh
 # srun -n $nprocs -N $procsonnode ./mitgcmuv_ad
 # srun --distribution=block:block --hint=nomultithread ./mitgcmuv_ad
- ibrun ./mitgcmuv_ad
+ ibrun ./mitgcmuv_ad > out 2>err
  rm tapelev*
  rm oad_cp*
  cp STDOUT.0000 $fich
@@ -51,7 +51,7 @@ do
  direc=run$name$ii
  mkdir $direc
  rm pickup.* pickup_*  maskCtrl* hFac* wunit* RA*ta DX*ta DY*ta DR*ta PH*ta
- mv -f *.meta *.data STDOUT* STDERR* $direc
+ mv -f *.meta *.data STDOUT* STDERR* out err scratch1.* $direc
  mv -f $direc/wunit*.*data ./
  cp -f ecco_ctrl_MIT_CE_000.opt0$ii OPTIM/
  cp -f ecco_cost_MIT_CE_000.opt0$ii OPTIM/
