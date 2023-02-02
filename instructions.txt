@@ -13,16 +13,21 @@ Once you log in, your current directory will be on the Login node. You should do
 
 PETSc is a computational library that if made use of can speed up STREAMICE by 2x to 3x. The TACC versions are configured incorrectly so we need to install our own version.
 
-A. get the code / scripts / input repo for rink:
+
+A. getting MITgcm.
+I will be making changes to the code to better enable supporting your work. to this end, you should clone my fork of MITgcm. Go to $WORK and type
+git clone https://github.com/dngoldberg/MITgcm.git
+
+B. get the code / scripts / input repo for rink:
 
 cd $WORK
 git clone https://github.com/dngoldberg/rink_glacier_streamice.git
 
-B. replace your bash configuration file. In rink_glacier_streamice/lonestar_scripts, there is a file called "bashrc_ls6_short". Open this file in vi, there are prompts to make some modifications for certain paths. Do this, and then save file file and replace your bashrc with the following:
+C. replace your bash configuration file. In rink_glacier_streamice/lonestar_scripts, there is a file called "bashrc_ls6_short". Open this file in vi, there are prompts to make some modifications for certain paths. Do this, and then save file file and replace your bashrc with the following:
 
 cp bashrc_ls6_short ~/.bashrc
 
-C. INSTALL PETSC.
+D. INSTALL PETSC.
 
 I recommend 3.14.2 as i know it works. Do the following steps to install.
 
@@ -42,10 +47,14 @@ At this point, you will not be able to compile correctly unless you are on a com
 this last step ensures you are off the compute node, which eats into our allocation!
 
 
+
+
+
 BUILD THE RINK INVERSION EXPERIMENT
 ==================================
 
 In order to build the adjoint model, we need OpenAD. And, in order to run OpenAD, we need singularity. Think of Singularity as a "virtual machine" even though it is actually a virtual operating system, which is something different. MITgcm will be compiled within this "virtual machine" but the result will be simply a program which can be run on the *actual* computer. TACC computers have singularity installed, but it is only available on compute nodes.
+
 
 1. Obtaining the singularity container. 
 
@@ -69,5 +78,28 @@ You will now need to wait 7-10 minutes for the process to complete. This is beca
 We are hopeful within the year that we can use Tapenade rather than OpenAD, which will mean no singularity, no interactive batch, and shorter compilation time. Patrick's student Shreyas is working on this and would be a good contact if you wish to know more about automatic differentiation.
 
 
+CREATING INPUT FILES
+====================
+
+Before you run, there are MATLAB binary files that must be created. There are scripts to do this -- id not suggest rewriting them in python for now. Clone the rink repo somehwere you have matlab (ie your laptop).
+
+Instructions on how to create the binary files are given in
+https://github.com/dngoldberg/rink_glacier_streamice/blob/main/README.md
+you will need to download certain datafiles, indicated in the MATLAB scripts.
+
+Once binary files are created, they must then be scp'ed to the input/ folder on lonestar6. (Dunyu will be able to aid you.)
+
 RUNNING THE INVERSION
 =====================
+
+If all has been set up correctly, you should be able to navigate to the lonestar_scripts folder on lonestar6 and simply type:
+
+bash submit_ad.sh
+
+a folder run_ad should be created. A lot of files and subfolders will be created. A way to see if things are happening correctly is that, every 20 seconds or so, a new file outputoptiter*** should be created. if you type
+
+grep misfit outputoptiter*
+
+you should see numbers, gradually decreasing. If not, I have steered you wrong with the instructions! We will then determine what has gone wrong.
+
+
