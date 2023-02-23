@@ -92,6 +92,12 @@ Once binary files are created, they must then be scp'ed to the input/ folder on 
 RUNNING THE INVERSION
 =====================
 
+you need to clone a new repo from github. it is m1qn3 -- a fortran version of a very widely used nonlinear optimisation algorithm.
+
+at the top level of rink_glacier_streamice, do the command
+
+git clone https://github.com/mjlosch/optim_m1qn3.git
+
 If all has been set up correctly, you should be able to navigate to the lonestar_scripts folder on lonestar6 and simply type:
 
 bash submit_ad.sh
