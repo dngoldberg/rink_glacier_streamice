@@ -66,7 +66,7 @@ rm data.ctrl
 echo $PWD
 echo $builddir
 cd $builddir
-cp ../../lonestar_scripts/optimMakefile ./
+cp ../../lonestar_scripts/optimMakefile ./Makefile
 str="                  -I../../$build_dir"
 sed "s@.*-I../../build_ad.*@$str@" Makefile > makefile_temp;
 mv makefile_temp Makefile
