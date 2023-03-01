@@ -80,8 +80,11 @@ thick = thick_mod;
 % MASK is -1 where ice is less then 2m (to avoid ill conditioning)
 % 
 
-hmask = zeros(size(thick));
+
+hmask = -1*ones(size(thick));
+hmask(mask_bm==0) = 0;
 hmask(thick>2)=1;
+hmask(mask_bm==1 & surf<100) = 0;
 hmask([1 end],:) = -1;
 hmask(:,[1 end]) = -1;
 con_mask = hmask==1;
