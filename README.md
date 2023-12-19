@@ -15,7 +15,10 @@ This experiment models a section of West Greenland containing Rink, Inngia and U
 
 The results took about 30 minutes to generate on 108 cpus on the ARCHER2 supercomputer.
 
+### MODELLED SPEED
 ![Modelled speed](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/temp.png)
+
+### ITS_LIVE
 ![Observed speed](https://www.geos.ed.ac.uk/~dgoldber/rink_figs/temp_obs.png)
 
 
