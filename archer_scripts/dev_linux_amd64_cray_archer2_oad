@@ -16,17 +16,22 @@ GET_FC_VERSION="--version"
 CHECK_FOR_LAPACK=t
 FC_CHECK=f
 
-INCLUDES='-I${NETCDF_DIR}/include -I/opt/cray/pe/mpich/8.1.4/ofi/gnu/9.1/include'
-LIBS='-L${NETCDF_DIR}/lib -L/opt/cray/pe/mpich/8.1.4/ofi/gnu/9.1/lib'
+INCLUDES='-I${NETCDF_DIR}/include -I${MPICH_DIR}/include'
+LIBS='-L${NETCDF_DIR}/lib -L${MPICH_DIR}/lib'
+PETSC_DIR='${WORK}/petsc'
 
 ### DNG ADDED THESE LINES
 #INCLUDES="$INCLUDES -I/work/n02/shared/MITgcm/PETSc/petsc/include/petsc/finclude"
 
-INCLUDES="$INCLUDES -I/work/n02/n02/dngoldbe/petsc/include/petsc"
-INCLUDES="$INCLUDES -I/work/n02/n02/dngoldbe/petsc/include"
+#INCLUDES="$INCLUDES -I/work/n02/n02/dngoldbe/petscnew/include/petsc"
+#INCLUDES="$INCLUDES -I/work/n02/n02/dngoldbe/petscnew/include"
+INCLUDES="$INCLUDES -I${PETSC_DIR}/include/petsc"
+INCLUDES="$INCLUDES -I${PETSC_DIR}/include"
 
 LIBS="$LIBS -L/work/n02/n02/dngoldbe/petsc/lib -lpetsc -lHYPRE -lcmumps -ldmumps -lesmumps -lsmumps -lzmumps -lmumps_common -lptesmumps -lesmumps -lpord -lsuperlu -lsuperlu_dist -lptscotch -lscotch -lptscotcherr -lscotcherr -lparmetis -lmetis -lm -lstdc++"
 ###
+#LIBS="$LIBS -L/work/n02/n02/dngoldbe/petsc/lib -lpetsc -lHYPRE -lsuperlu -lsuperlu_dist -lptscotch -lscotch -lptscotcherr -lscotcherr -lparmetis -lmetis -lm -lstdc++"
+#LIBS="$LIBS -L${PETSC_DIR}/lib -lpetsc -lm -lstdc++"
 
 NOOPTFLAGS='-O0'
 NOOPTFILES=''

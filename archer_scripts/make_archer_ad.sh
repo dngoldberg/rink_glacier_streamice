@@ -13,10 +13,9 @@
 #module load cray-netcdf-hdf5parallel/4.7.4.2
 
 
-module load PrgEnv-gnu
-module swap cray-mpich  cray-mpich/8.1.4
-module load cray-hdf5-parallel/1.12.0.3
-module load cray-netcdf-hdf5parallel/4.7.4.3
+#module swap cray-mpich  cray-mpich/8.1.4
+#module load cray-hdf5-parallel/1.12.0.3
+#module load cray-netcdf-hdf5parallel/4.7.4.3
 PETSCDIR=/work/n02/n02/dngoldbe/petsc/
 
 
@@ -48,7 +47,8 @@ ln ../$code_dir/cost_test.F.snap_noBglen ../$code_dir/cost_test.F
 
 
 make CLEAN
-$ROOTDIR/tools/genmake2 -mods='../code' -of=dev_linux_amd64_cray_archer2_oad -oad -mpi --oadsingularity "$sing_str"
+ln -s ../archer_scripts/dev_linux_amd64_cray_archer2_oad .
+$ROOTDIR/tools/genmake2 -mods='../code' -of=/home/n02/n02/dngoldbe/own_scripts/dev_linux_amd64_cray_archer2_oad  -oad -mpi --oadsingularity "$sing_str"
 #$ROOTDIR/tools/genmake2 -ieee -mods='../code ../newcode' -of=$ROOTDIR/tools/build_options/linux_amd64_gfortran -mpi
 #$ROOTDIR/tools/genmake2 -mods='../code' -mpi
 ln -s $PETSCDIR/include/*.mod .
