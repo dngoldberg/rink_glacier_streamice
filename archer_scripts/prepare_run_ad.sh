@@ -18,9 +18,9 @@ fi
 
 
 ln -s $input_dir/* .
-ln -s ../scripts/opt_script.csh .
-ln -s ../scripts/add0upto3c .
-ln -s ../scripts/clear_optim.sh .
+ln -s ../archer_scripts/opt_script.csh .
+ln -s ../archer_scripts/add0upto3c .
+ln -s ../archer_scripts/clear_optim.sh .
 
 # Deep copy of the master namelist (so it doesn't get overwritten in input/)
 rm -f data
@@ -45,9 +45,9 @@ ln -s ../$build_dir/mitgcmuv_ad .
 
 
 module load PrgEnv-gnu
-module swap cray-mpich  cray-mpich/8.1.4
-module load cray-hdf5-parallel/1.12.0.3
-module load cray-netcdf-hdf5parallel/4.7.4.3
+#module swap cray-mpich  cray-mpich/8.1.4
+#module load cray-hdf5-parallel/1.12.0.3
+#module load cray-netcdf-hdf5parallel/4.7.4.3
 
 
 optimdir=OPTIM
@@ -59,6 +59,7 @@ fi
 
 echo "GOT HERE PREPARE"
 
+
 cd OPTIM
 rm optim.x
 rm data.optim
@@ -66,7 +67,7 @@ rm data.ctrl
 echo $PWD
 echo $builddir
 cd $builddir
-cp ../../scripts/Makefile ./
+cp -v ../../archer_scripts/Makefile.optim_m1qn3.ARCHER ./Makefile
 str="                  -I../../$build_dir"
 sed "s@.*-I../../build_ad.*@$str@" Makefile > makefile_temp;
 mv makefile_temp Makefile
@@ -76,6 +77,6 @@ cp $builddir/optim.x .
 ln -s ../data.optim .
 ln -s ../data.ctrl .
 cd ..
-./clear_optim.sh
+bash clear_optim.sh
 
 
